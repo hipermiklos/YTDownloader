@@ -1,8 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox, filedialog
 from pytubefix import YouTube
-import os
-import subprocess
 from PIL import Image, ImageTk
 import base64
 from io import BytesIO
