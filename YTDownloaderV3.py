@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox, filedialog
 from pytubefix import YouTube
-from moviepy import AudioFileClip
 import os
+import subprocess
 from PIL import Image, ImageTk
 import base64
 from io import BytesIO
@@ -22,14 +22,9 @@ def download_video(url, path, fmt):
             messagebox.showinfo("INFO", f"Download success: {title}.mp4")
 
         elif fmt == "MP3":
+            # Közvetlenül mp3-ként letöltjük
             stream = yt.streams.filter(only_audio=True).first()
-            temp_file = os.path.join(path, f"{title}.mp4")
-            stream.download(path, filename=f"{title}.mp4")
-
-            mp3_file = os.path.join(path, f"{title}.mp3")
-            AudioFileClip(temp_file).write_audiofile(mp3_file)
-            os.remove(temp_file)
-
+            stream.download(path, filename=f"{title}.mp3")
             loading.destroy()
             messagebox.showinfo("INFO", f"Download success: {title}.mp3")
 
@@ -78,7 +73,6 @@ root.title("Hipermiklos YTDownloader")
 root.configure(bg="dark red")
 root.geometry("500x500")
 
-
 # URL input
 url_label = tk.Label(root, text="URL: ")
 url_label.place(relx=0.5, rely=0.05, anchor="center")
@@ -116,8 +110,9 @@ pil_image = Image.open(BytesIO(image_data))
 pil_image = pil_image.resize((100, 100))
 img = ImageTk.PhotoImage(pil_image)
 image_label = tk.Label(root, image=img, bg="dark red")
-image_label.image = img  # referenciát megőrizni
+image_label.image = img
 image_label.place(relx=0.5, rely=1, anchor="s")
+
 icon_data = base64.b64decode(image_b64)
 icon_image = Image.open(BytesIO(icon_data))
 icon_photo = ImageTk.PhotoImage(icon_image)
